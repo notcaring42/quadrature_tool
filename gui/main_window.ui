@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>main_window</class>
+ <widget class="QWidget" name="main_window">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>692</width>
+    <height>774</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Numerical Integration Tool</string>
+  </property>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>431</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="graph_layout"/>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>20</y>
+     <width>160</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="method_layout">
+    <item>
+     <widget class="QRadioButton" name="rb1">
+      <property name="text">
+       <string>Riemman (Left)</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">method_group</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="rb2">
+      <property name="text">
+       <string>Riemman (Right)</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">method_group</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="rb3">
+      <property name="text">
+       <string>Riemman (Mid)</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">method_group</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="rb4">
+      <property name="text">
+       <string>Trapezoidal</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">method_group</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="rb5">
+      <property name="text">
+       <string>Simpson's</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">method_group</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="rb6">
+      <property name="text">
+       <string>Gaussian</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">method_group</string>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="rb7">
+      <property name="text">
+       <string>Monte Carlo</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">method_group</string>
+      </attribute>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="formLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>320</y>
+     <width>160</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="params_layout">
+    <property name="fieldGrowthPolicy">
+     <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+    </property>
+    <item row="0" column="0">
+     <widget class="QLabel" name="x_Left_Label">
+      <property name="text">
+       <string>X-Left</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="x_Left_Line_Edit">
+      <property name="text">
+       <string>-7.0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="x_Right_Label">
+      <property name="text">
+       <string>X-Right</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="x_Right_Line_Edit">
+      <property name="text">
+       <string>7.0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="2">
+     <widget class="QPushButton" name="update_button">
+      <property name="text">
+       <string>Update</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>320</y>
+     <width>431</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="function_layout">
+    <item>
+     <layout class="QHBoxLayout" name="function_horiz">
+      <item>
+       <widget class="QLabel" name="func_label">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>f(x):</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="f_input">
+        <property name="text">
+         <string>x^2</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="adiv_horiz">
+      <item>
+       <widget class="QLabel" name="adiv_label">
+        <property name="text">
+         <string>F(x):</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="F_input">
+        <property name="text">
+         <string>x^3/3</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="results_horiz">
+      <item>
+       <layout class="QHBoxLayout" name="calculated_horiz">
+        <item>
+         <widget class="QLabel" name="calculated_label">
+          <property name="text">
+           <string>Result:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="calculated_result">
+          <property name="text">
+           <string>N/A</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="error_horiz">
+        <item>
+         <widget class="QLabel" name="error_label">
+          <property name="text">
+           <string>Error:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="error_calculated">
+          <property name="text">
+           <string>N/A</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>480</y>
+     <width>241</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="method_comparison_layout">
+    <item>
+     <layout class="QHBoxLayout" name="rl_horiz">
+      <item>
+       <widget class="QLabel" name="rl_label">
+        <property name="minimumSize">
+         <size>
+          <width>111</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Riemman (Left)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="rl_check">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">comparison_group</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="rl_n_label">
+        <property name="text">
+         <string>n=</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="rl_n">
+        <property name="text">
+         <string>20</string>
+        </property>
+        <property name="maxLength">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="rr_horiz">
+      <item>
+       <widget class="QLabel" name="rr_label">
+        <property name="minimumSize">
+         <size>
+          <width>111</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Riemman (Right)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="rr_check">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">comparison_group</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="rr_n_label">
+        <property name="text">
+         <string>n=</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="rr_n">
+        <property name="text">
+         <string>20</string>
+        </property>
+        <property name="maxLength">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="rm_horiz">
+      <item>
+       <widget class="QLabel" name="rm_label">
+        <property name="minimumSize">
+         <size>
+          <width>111</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Riemman (Mid)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="rm_check">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">comparison_group</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="rm_n_label">
+        <property name="text">
+         <string>n=</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="rm_n">
+        <property name="text">
+         <string>20</string>
+        </property>
+        <property name="maxLength">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="trap_horiz">
+      <item>
+       <widget class="QLabel" name="trap_label">
+        <property name="minimumSize">
+         <size>
+          <width>111</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Trapezoidal</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="trap_check">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">comparison_group</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="trap_n_label">
+        <property name="text">
+         <string>n=</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="trap_n">
+        <property name="text">
+         <string>20</string>
+        </property>
+        <property name="maxLength">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="simp_horiz">
+      <item>
+       <widget class="QLabel" name="simp_label">
+        <property name="minimumSize">
+         <size>
+          <width>111</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Simpson's</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="simp_check">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">comparison_group</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="simp_n_label">
+        <property name="text">
+         <string>n=</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="simp_n">
+        <property name="text">
+         <string>20</string>
+        </property>
+        <property name="maxLength">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="gauss_horiz">
+      <item>
+       <widget class="QLabel" name="gauss_label">
+        <property name="minimumSize">
+         <size>
+          <width>111</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Gaussian</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="gauss_check">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">comparison_group</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="gauss_n_label">
+        <property name="text">
+         <string>n=</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="gauss_n">
+        <property name="text">
+         <string>5</string>
+        </property>
+        <property name="maxLength">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="monte_horiz">
+      <item>
+       <widget class="QLabel" name="monte_label">
+        <property name="minimumSize">
+         <size>
+          <width>111</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Monte Carlo</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="monte_check">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">comparison_group</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="mont_n_label">
+        <property name="text">
+         <string>n=</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="monte_n">
+        <property name="text">
+         <string>500</string>
+        </property>
+        <property name="maxLength">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>480</y>
+     <width>361</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <row>
+    <property name="text">
+     <string>RL</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>RR</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>RM</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Trap</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Simp</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Monte</string>
+    </property>
+   </row>
+   <column>
+    <property name="text">
+     <string>Approx.</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Error</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Time</string>
+    </property>
+   </column>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="method_group"/>
+  <buttongroup name="comparison_group"/>
+ </buttongroups>
+</ui>

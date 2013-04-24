@@ -1,0 +1,14 @@
+{
+	"folders":
+	[
+		{
+			"path": "/home/cheeser12/Documents/school/CPLS5590/project",
+            "file_exclude_patterns":
+            [
+                // exclude ui files
+                "*.ui",
+                "*.tar"
+            ]
+		}
+	]
+}

@@ -1,15 +1,39 @@
 import src.quadrature as quad
+import sys
+
+from numpy import *
 from PyQt4 import QtGui
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg \
     import FigureCanvasQTAgg as FigureCanvas
 from gui.main_window import Ui_main_window
 from src.utils import MethodNames, parse_function
-from numpy import *
-import sys
 
 
 class QuadMethod:
+    """Holds a Quadrature object, references to the inputs
+    used to change it, and the name of the object's class,
+    and is responsible for updating the object.
+
+    Attributes
+    ----------
+    quadrature: the Quadrature object
+    method: a reference to the class constructor, used
+        to create a new value for quadrature
+    lx_input: QLineEdit used to define the lower-x bound (a)
+    rx_input: QLineEdit used to define the upper-x bound (b)
+    n_input: QLineEdit used to define n, the number of polygons
+        to use in quadrature
+    def_n: the default n value that the Quadrature object should use
+    max_n: the maximum n value that the Quadrature object can use
+    needs_even: boolean representing whether the Quadrature object
+        can only use even values of n
+
+    Notes
+    -----
+    The update function is actually called by QuadUpdater, which holds
+    references to numerous QuadMethods
+    """
     def __init__(self, top_widget, class_name, n_input,
                  def_n=20, max_n=1500, needs_even=False):
         self.lx_input = top_widget.findChild((QtGui.QLineEdit,),

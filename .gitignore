@@ -1,0 +1,5 @@
+*.tar
+*.sublime*
+*.pyc
+src/*.pyc
+gui/*.pyc

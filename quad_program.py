@@ -385,6 +385,7 @@ class MplCanvas(FigureCanvas):
         self.update_figure()
 
     def update_figure(self):
+        """Updates and draws the figure"""
         # Clear out all the axes of the figure
         for axis in self.fig.axes:
             axis.cla()

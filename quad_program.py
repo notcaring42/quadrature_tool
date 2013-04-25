@@ -20,10 +20,6 @@ class QuadMethod:
     quadrature: the Quadrature object
     method: a reference to the class constructor, used
         to create a new value for quadrature
-    function_updater: FunctionUpdater used to grab f(x) and
-        F(x)
-    result: QLabel for displaying the result of integration
-    error: QLabel for displaying the error of the integration
     lx_input: QLineEdit used to define the lower-x bound (a)
     rx_input: QLineEdit used to define the upper-x bound (b)
     n_input: QLineEdit used to define n, the number of polygons
@@ -60,10 +56,6 @@ class QuadMethod:
                                              'x_Left_Line_Edit')
         self.rx_input = top_widget.findChild((QtGui.QLineEdit,),
                                              'x_Right_Line_Edit')
-        self.result = top_widget.findChild((QtGui.QLabel,),
-                                           'calculated_result')
-        self.error = top_widget.findChild((QtGui.QLabel,),
-                                          'error_calculated')
         self.function_updater = FunctionUpdater(top_widget)
         self.n_input = n_input
         self.class_name = class_name
@@ -79,9 +71,7 @@ class QuadMethod:
         self.update()
 
     def update(self):
-        """Updates the Quadrature object for this QuadMethod.
-        Also displays the result and error of integration.
-        """
+        """Updates the Quadrature object for this QuadMethod."""
         # Parse lx
         try:
             lx = float(self.lx_input.text())
@@ -124,25 +114,6 @@ class QuadMethod:
         # class constructor
         self.quadrature = self.method(lx, rx, n)
 
-        # Display results of integration and calculated error
-        # If we hit a syntax error, then we failed to parse the function
-        # and we just display 'N/A'
-        # Note that the error is optional because F(x) is optional: therefore,
-        # the second try statement is nested in the first so that we can
-        # display the result (which we should always have) but not
-        # the optional error
-        try:
-            self.result.setText(str(self.quadrature.integrate(
-                                self.function_updater.f)))
-            try:
-                self.error.setText(str(self.quadrature.error(
-                                   self.function_updater.F)))
-            except SyntaxError:
-                self.error.setText('N/A')
-        except SyntaxError:
-            self.result.setText('N/A')
-            self.error.setText('N/A')
-
 
 class QuadUpdater:
     """Holds a dictionary of QuadMethods and is responsible
@@ -151,6 +122,12 @@ class QuadUpdater:
     Attributes
     ----------
     quad_methods: a dictionary of QuadMethods
+    result: QLabel used to display the result of the integration
+    error: QLabel used to display the error of the integration
+    method_group: QButtonGroup used to select the currently
+        active quadrature method
+    function_updater: FunctionUpdater used to grab f(x)
+        and F(x)
 
     Notes
     -----
@@ -171,6 +148,13 @@ class QuadUpdater:
         """
         # Create the QuadMethod dictionary
         self.quad_methods = self.create_dictionary(top_widget)
+        self.result = top_widget.findChild((QtGui.QLabel,),
+                                           'calculated_result')
+        self.error = top_widget.findChild((QtGui.QLabel,),
+                                          'error_calculated')
+        self.method_group = top_widget.findChild((QtGui.QButtonGroup,),
+                                                 'method_group')
+        self.function_updater = FunctionUpdater(top_widget)
 
         # Register the update function with the update button
         update_button = top_widget.findChild((QtGui.QPushButton,),
@@ -181,9 +165,59 @@ class QuadUpdater:
         self.update()
 
     def update(self):
-        """Updates each QuadMethod tracked by this QuadUpdater"""
+        """Updates each QuadMethod tracked by this QuadUpdater,
+        determines the currently active quadrature method
+        from the method_group, and displays the result/
+        error of integration
+        """
         for quad_method in self.quad_methods.values():
             quad_method.update()
+
+        # Grab the checked id of the button group
+        # to determine which quadrature method to graph.
+        # Grab the corresponding Quadrature object from
+        # the quad_methods dictionary
+        m_i = -2 - self.method_group.checkedId()
+
+        if m_i == MethodNames.LEFT_POINT_RIEMMAN:
+            Q = self.quad_methods['lpr'].quadrature
+        elif m_i == MethodNames.RIGHT_POINT_RIEMMAN:
+            Q = self.quad_methods['rpr'].quadrature
+        elif m_i == MethodNames.MID_POINT_RIEMMAN:
+            Q = self.quad_methods['mpr'].quadrature
+        elif m_i == MethodNames.TRAPEZOIDAL:
+            Q = self.quad_methods['trap'].quadrature
+        elif m_i == MethodNames.SIMPSONS:
+            Q = self.quad_methods['simp'].quadrature
+        elif m_i == MethodNames.GAUSSIAN:
+            Q = self.quad_methods['gauss'].quadrature
+        elif m_i == MethodNames.MONTE_CARLO:
+            Q = self.quad_methods['monte'].quadrature
+        else:
+            raise IndexError('checkedId did not correspond ' +
+                             'to a valid method')
+
+        # Set the active quadrature
+        self.active_quadrature = Q
+
+        # Display results of integration and calculated error
+        # If we hit a syntax error, then we failed to parse the function
+        # and we just display 'N/A'
+        # Note that the error is optional because F(x) is optional: therefore,
+        # the second try statement is nested in the first so that we can
+        # display the result (which we should always have) but not
+        # the optional error
+        try:
+            self.result.setText(str(Q.integrate(
+                                self.function_updater.f)))
+            try:
+                self.error.setText(str(Q.error(
+                                   self.function_updater.F)))
+            except SyntaxError:
+                self.error.setText('N/A')
+        except SyntaxError:
+            self.result.setText('N/A')
+            self.error.setText('N/A')
 
     def create_dictionary(self, top_widget):
         """Creates the QuadMethod dictionary
@@ -259,7 +293,6 @@ class FunctionUpdater:
                                             'f_input')
         self.F_input = top_widget.findChild((QtGui.QLineEdit,),
                                             'F_input')
-
         # Register the update function with the update button
         update_button = top_widget.findChild((QtGui.QPushButton,),
                                              'update_button')
@@ -302,25 +335,25 @@ class MplCanvas(FigureCanvas):
     Attributes
     ----------
     fig: the matplotlib figure
-    quad_methods: dictionary of quadrature methods
-    method_group: QButtonGroup used to select which
-        quadrature method to graph
-    function_updater: FunctionUpdater to grab f(x)
-        for graphing
+    quad_updater: instance of QuadUpdater used to grab
+            currently active quadrature
+    function_updater: instance of FunctionUpdater used to
+            graph f(x)
 
     Notes
     -----
     this class re-computes the figure every time the 'Update'
     button is pressed
     """
-    def __init__(self, top_widget, quad_methods, function_updater,
+    def __init__(self, top_widget, quad_updater, function_updater,
                  parent=None, width=5, height=4, dpi=100):
         """Creates a new MplCanvas
 
         Parameters
         ----------
         top_widget: the top level widget of the application
-        quad_methods: dictionary of quadrature methods
+        quad_updater: instance of QuadUpdater used to grab
+            currently active quadrature
         function_updater: instance of FunctionUpdater used to
             graph f(x)
 
@@ -328,10 +361,8 @@ class MplCanvas(FigureCanvas):
         -------
         a new MplCanvas
         """
-        self.quad_methods = quad_methods
+        self.quad_updater = quad_updater
         self.function_updater = function_updater
-        self.method_group = top_widget.findChild((QtGui.QButtonGroup,),
-                                                 'method_group')
 
         # Create a matplotlib figure
         self.fig = Figure(figsize=(width, height), dpi=dpi)
@@ -358,29 +389,9 @@ class MplCanvas(FigureCanvas):
         for axis in self.fig.axes:
             axis.cla()
 
-        # Grab the checked id of the button group
-        # to determine which quadrature method to graph.
-        # Grab the corresponding Quadrature object from
-        # the quad_methods dictionary
-        m_i = -2 - self.method_group.checkedId()
-
-        if m_i == MethodNames.LEFT_POINT_RIEMMAN:
-            Q = self.quad_methods['lpr'].quadrature
-        elif m_i == MethodNames.RIGHT_POINT_RIEMMAN:
-            Q = self.quad_methods['rpr'].quadrature
-        elif m_i == MethodNames.MID_POINT_RIEMMAN:
-            Q = self.quad_methods['mpr'].quadrature
-        elif m_i == MethodNames.TRAPEZOIDAL:
-            Q = self.quad_methods['trap'].quadrature
-        elif m_i == MethodNames.SIMPSONS:
-            Q = self.quad_methods['simp'].quadrature
-        elif m_i == MethodNames.GAUSSIAN:
-            Q = self.quad_methods['gauss'].quadrature
-        elif m_i == MethodNames.MONTE_CARLO:
-            Q = self.quad_methods['monte'].quadrature
-        else:
-            raise IndexError('checkedId did not correspond ' +
-                             'to a valid method')
+        # Grab the currently active quadrature method for
+        # graphing
+        Q = self.quad_updater.active_quadrature
 
         # Attempt to graph the function and the quadrature polygons
         # If we get a SyntaxError, then we weren't able to parse
@@ -406,7 +417,7 @@ if __name__ == '__main__':
     scroll.setWidget(widget)
 
     # Create the canvas and add it to the window
-    graph = MplCanvas(widget, QuadUpdater(widget).quad_methods,
+    graph = MplCanvas(widget, QuadUpdater(widget),
                       FunctionUpdater(widget))
     graph_layout = widget.findChild((QtGui.QVBoxLayout,),
                                     'graph_layout')

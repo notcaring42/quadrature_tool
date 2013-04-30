@@ -35,7 +35,7 @@ class QuadMethod:
     references to numerous QuadMethods
     """
     def __init__(self, top_widget, class_name, n_input,
-                 def_n=20, max_n=1500, needs_even=False):
+                 def_n=20, max_n=3000, needs_even=False):
         """Creates a new QuadMethod
 
         Parameters
@@ -106,8 +106,8 @@ class QuadMethod:
         # If the method needs an even n and if n is odd,
         # set the default n
         if self.needs_even and n % 2 == 1:
-            n = self.def_n
-            self.n_input.setText(str(self.def_n))
+            n = n - 1
+            self.n_input.setText(str(n))
 
         # Finally, we create the Quadrature object
         # using the parsed values and the reference to the
@@ -122,6 +122,9 @@ class QuadUpdater:
     Attributes
     ----------
     quad_methods: a dictionary of QuadMethods
+    quad_check_buttons: a list of tuples matching method names
+        and matching checkboxes
+    active_quad_method: the current quadrature method being graphed
     result: QLabel used to display the result of the integration
     error: QLabel used to display the error of the integration
     method_group: QButtonGroup used to select the currently
@@ -147,13 +150,16 @@ class QuadUpdater:
         of the 'Update button'
         """
         # Create the QuadMethod dictionary
-        self.quad_methods = self.create_dictionary(top_widget)
+        self.quad_methods = self.create_method_dict(top_widget)
+        self.quad_check_buttons = self.create_button_list(top_widget)
         self.result = top_widget.findChild((QtGui.QLabel,),
                                            'calculated_result')
         self.error = top_widget.findChild((QtGui.QLabel,),
                                           'error_calculated')
         self.method_group = top_widget.findChild((QtGui.QButtonGroup,),
                                                  'method_group')
+        self.quad_table = top_widget.findChild((QtGui.QTableWidget,),
+                                               'quad_method_table')
         self.function_updater = FunctionUpdater(top_widget)
 
         # Register the update function with the update button
@@ -180,46 +186,155 @@ class QuadUpdater:
         m_i = -2 - self.method_group.checkedId()
 
         if m_i == MethodNames.LEFT_POINT_RIEMMAN:
-            Q = self.quad_methods['lpr'].quadrature
+            Q = self.quad_methods['lpr']
         elif m_i == MethodNames.RIGHT_POINT_RIEMMAN:
-            Q = self.quad_methods['rpr'].quadrature
+            Q = self.quad_methods['rpr']
         elif m_i == MethodNames.MID_POINT_RIEMMAN:
-            Q = self.quad_methods['mpr'].quadrature
+            Q = self.quad_methods['mpr']
         elif m_i == MethodNames.TRAPEZOIDAL:
-            Q = self.quad_methods['trap'].quadrature
+            Q = self.quad_methods['trap']
         elif m_i == MethodNames.SIMPSONS:
-            Q = self.quad_methods['simp'].quadrature
+            Q = self.quad_methods['simp']
         elif m_i == MethodNames.GAUSSIAN:
-            Q = self.quad_methods['gauss'].quadrature
+            Q = self.quad_methods['gauss']
         elif m_i == MethodNames.MONTE_CARLO:
-            Q = self.quad_methods['monte'].quadrature
+            Q = self.quad_methods['monte']
         else:
             raise IndexError('checkedId did not correspond ' +
                              'to a valid method')
 
-        # Set the active quadrature
-        self.active_quadrature = Q
+        # Set the active quadrature method
+        self.active_quad_method = Q
 
-        # Display results of integration and calculated error
-        # If we hit a syntax error, then we failed to parse the function
-        # and we just display 'N/A'
-        # Note that the error is optional because F(x) is optional: therefore,
-        # the second try statement is nested in the first so that we can
-        # display the result (which we should always have) but not
-        # the optional error
-        try:
-            self.result.setText(str(Q.integrate(
-                                self.function_updater.f)))
-            try:
-                self.error.setText(str(Q.error(
-                                   self.function_updater.F)))
-            except SyntaxError:
-                self.error.setText('N/A')
-        except SyntaxError:
-            self.result.setText('N/A')
-            self.error.setText('N/A')
+        # Loop through each check button to determine
+        # which methods to show on the table
+        # i keeps track of the row number for each method
+        row_number = 0
+        for qm_name, qm_check in self.quad_check_buttons:
+            q_m = self.quad_methods[qm_name]
 
-    def create_dictionary(self, top_widget):
+            # If this method is checked for the table or if it's the one
+            # we're graphing, we're going to need to grab integration
+            # results
+            #
+            # Note: this seems a little convulted to check both conditions
+            # up top and then again within the if statement, but by doing
+            # this, if the method is checked and is the one being graphed,
+            # we can share integration values between the two rather than
+            # integrating twice. This was especially noticable with
+            # Monte Carlo, where the results under the graph and in the table
+            # were different (because Monte Carlo is random). It also saves time!
+            if qm_check.isChecked() or q_m == self.active_quad_method:
+                # Display results of integration and calculated error
+                # If we hit a syntax error, then we failed to
+                # parse the function and we just display 'N/A'
+                # Note that the error is optional because F(x) is
+                # optional: therefore,the second try statement is
+                # nested in the first so that we can display the result
+                # (which we should always have) but not the optional error
+                try:
+                    integrate_value = str(q_m.quadrature.
+                                          integrate(self.function_updater.f))
+                    time_value = q_m.quadrature.timeTaken
+                    time_value = '{:g}'.format(time_value)
+                    try:
+                        error_value = q_m.quadrature.error(self.
+                                                           function_updater.F)
+                        error_value = '{:g}'.format(error_value)
+                    except SyntaxError:
+                        error_value = ''
+                except SyntaxError:
+                    integrate_value = ''
+                    error_value = ''
+                    time_value = ''
+
+                # If q_m is the active method, then show the result and error
+                # under the graph
+                if q_m == self.active_quad_method:
+                    if integrate_value == '':
+                        self.result.setText('N/A')
+                    else:
+                        self.result.setText(integrate_value)
+
+                    if error_value == '':
+                        self.error.setText('N/A')
+                    else:
+                        self.error.setText(error_value)
+
+                # Get the values to display on the table. If this method
+                # isn't checked, just set the values to a blank string
+                if not qm_check.isChecked():
+                    table_i_value = ''
+                    table_e_value = ''
+                    table_t_value = ''
+                else:
+                    table_i_value = integrate_value
+                    table_e_value = error_value
+                    table_t_value = time_value
+            else:
+                # The method isn't checked or the active method, so
+                # no integration is necessary:
+                # We only need to set table values, so just set the
+                # values to blank strings
+                table_i_value = ''
+                table_e_value = ''
+                table_t_value = ''
+
+            self.quad_table.setItem(row_number, 0,
+                                    QtGui.QTableWidgetItem(table_i_value))
+            self.quad_table.setItem(row_number, 1,
+                                    QtGui.QTableWidgetItem(table_e_value))
+            self.quad_table.setItem(row_number, 2,
+                                    QtGui.QTableWidgetItem(table_t_value))
+
+            # Increment the row number
+            row_number += 1
+
+    def create_button_list(self, top_widget):
+        """Creates a list of tuples matching quad methods with
+        their corresponding checkboxes on the GUI.
+
+        Parameters
+        ----------
+        top_widget: the top level widget of the application
+
+        Returns
+        -------
+        a list of tuples matching quad methods with
+        their corresponding checkboxes on the GUI.
+        """
+        # Create kvp tuples for each QuadMethod and its key
+        # This doesn't create a real dictionary, but instead
+        # a list of tuples because the order of the elements
+        # will be important (dictionaries can have an order that
+        # differs from how you defined it)
+        kvp = []
+
+        kvp.append(('lpr', top_widget.findChild((QtGui.QCheckBox,),
+                   'rl_check')))
+
+        kvp.append(('rpr', top_widget.findChild((QtGui.QCheckBox,),
+                   'rr_check')))
+
+        kvp.append(('mpr', top_widget.findChild((QtGui.QCheckBox,),
+                   'rm_check')))
+
+        kvp.append(('trap', top_widget.findChild((QtGui.QCheckBox,),
+                   'trap_check')))
+
+        kvp.append(('simp', top_widget.findChild((QtGui.QCheckBox,),
+                   'simp_check')))
+
+        kvp.append(('gauss', top_widget.findChild((QtGui.QCheckBox,),
+                   'gauss_check')))
+
+        kvp.append(('monte', top_widget.findChild((QtGui.QCheckBox,),
+                   'monte_check')))
+
+        # Return the list
+        return kvp
+
+    def create_method_dict(self, top_widget):
         """Creates the QuadMethod dictionary
 
         Parameters
@@ -293,6 +408,9 @@ class FunctionUpdater:
                                             'f_input')
         self.F_input = top_widget.findChild((QtGui.QLineEdit,),
                                             'F_input')
+
+        self.tw = widget.findChild((QtGui.QTableWidget,),
+                                   'tableWidget')
         # Register the update function with the update button
         update_button = top_widget.findChild((QtGui.QPushButton,),
                                              'update_button')
@@ -392,7 +510,7 @@ class MplCanvas(FigureCanvas):
 
         # Grab the currently active quadrature method for
         # graphing
-        Q = self.quad_updater.active_quadrature
+        Q = self.quad_updater.active_quad_method.quadrature
 
         # Attempt to graph the function and the quadrature polygons
         # If we get a SyntaxError, then we weren't able to parse
@@ -416,6 +534,7 @@ if __name__ == '__main__':
     window.setupUi(widget)
     scroll = QtGui.QScrollArea()
     scroll.setWidget(widget)
+    scroll.widgetResizable = True
 
     # Create the canvas and add it to the window
     graph = MplCanvas(widget, QuadUpdater(widget),
@@ -426,8 +545,9 @@ if __name__ == '__main__':
 
     # Resize the window, set the window title, and then
     # show the window
-    scroll.resize(700, 800)
+    scroll.resize(1100, 465)
     scroll.setWindowTitle('Numerical Integrator')
+
     scroll.show()
 
     sys.exit(app.exec_())

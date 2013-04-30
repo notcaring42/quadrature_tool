@@ -1,4 +1,3 @@
-import src.quadrature as quad
 import sys
 
 from numpy import *
@@ -6,6 +5,8 @@ from PyQt4 import QtGui
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg \
     import FigureCanvasQTAgg as FigureCanvas
+
+import src.quadrature as quad
 from gui.main_window import Ui_main_window
 from src.utils import MethodNames, parse_function
 
@@ -43,8 +44,10 @@ class QuadMethod:
         top_widget: the top level widget of the application
         class_name: the name of the quadrature method's class
         n_input: QLineEdit used to input n for this quadrature method
-        def_n: the default value for n that the quadrature method should use
-        max_n: the maximum value for n that the quadrature method can use
+        def_n: the default value for n that the quadrature method
+            should use
+        max_n: the maximum value for n that the quadrature method
+            can use
         needs_even: boolean representing whether the Quadrature object
             can only use even values of n
 
@@ -213,17 +216,18 @@ class QuadUpdater:
         for qm_name, qm_check in self.quad_check_buttons:
             q_m = self.quad_methods[qm_name]
 
-            # If this method is checked for the table or if it's the one
-            # we're graphing, we're going to need to grab integration
-            # results
+            # If this method is checked for the table or if it's
+            # the one we're graphing, we're going to need to grab
+            # integration results
             #
-            # Note: this seems a little convulted to check both conditions
-            # up top and then again within the if statement, but by doing
-            # this, if the method is checked and is the one being graphed,
-            # we can share integration values between the two rather than
-            # integrating twice. This was especially noticable with
-            # Monte Carlo, where the results under the graph and in the table
-            # were different (because Monte Carlo is random). It also saves time!
+            # Note: this seems a little convulted to check both
+            # conditions up top and then again within the if statement,
+            # but by doing this, if the method is checked and is the
+            # one being graphed, we can share integration values
+            # between the two rather than integrating twice. This was
+            # especially noticable with Monte Carlo, where the results
+            # under the graph and in the table were different (because
+            # Monte Carlo is random). It also saves time!
             if qm_check.isChecked() or q_m == self.active_quad_method:
                 # Display results of integration and calculated error
                 # If we hit a syntax error, then we failed to
@@ -231,11 +235,12 @@ class QuadUpdater:
                 # Note that the error is optional because F(x) is
                 # optional: therefore,the second try statement is
                 # nested in the first so that we can display the result
-                # (which we should always have) but not the optional error
+                # (which we should always have) but not the optional
+                # error
                 try:
                     integrate_value = str(q_m.quadrature.
                                           integrate(self.function_updater.f))
-                    time_value = q_m.quadrature.timeTaken
+                    time_value = q_m.quadrature.time_taken
                     time_value = '{:g}'.format(time_value)
                     try:
                         error_value = q_m.quadrature.error(self.
@@ -391,7 +396,8 @@ class FunctionUpdater:
 
     Notes
     -----
-    this class is configured to update when the 'Update' button is pressed
+    this class is configured to update when the 'Update' button
+    is pressed
     """
     def __init__(self, top_widget):
         """Creates a new FunctionUpdater
@@ -423,13 +429,13 @@ class FunctionUpdater:
         """Updates the functions f and F by parsing their respective
         inputs"""
 
-        # To parse the functions, we first need to define global variables
-        # to hold the strings from the QLineEdit's so that the exec statement
-        # can access them
-        # We then use parse_function to turn the strings into python compliant
-        # expressions
-        # Finally, we use exec to define python functions and use eval to
-        # evaluate the function string as a mathematical expression
+        # To parse the functions, we first need to define global
+        # variables to hold the strings from the QLineEdit's so that
+        # the exec statement can access them.
+        # We then use parse_function to turn the strings into python
+        # compliant expressions.
+        # Finally, we use exec to define python functions and use eval
+        # to evaluate the function string as a mathematical expression.
         global f_str
         f_str = parse_function(str(self.f_input.text()))
 
@@ -517,7 +523,7 @@ class MplCanvas(FigureCanvas):
         # a valid function: then, just clear the figure and display
         # nothing
         try:
-            Q.shadeUnderCurve(self.fig, self.function_updater.f)
+            Q.shade_under_curve(self.fig, self.function_updater.f)
         except SyntaxError:
             self.fig.clf()
 

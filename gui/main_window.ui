@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1077</width>
+    <width>1159</width>
     <height>461</height>
    </rect>
   </property>
@@ -276,7 +276,7 @@
     <rect>
      <x>630</x>
      <y>160</y>
-     <width>440</width>
+     <width>501</width>
      <height>279</height>
     </rect>
    </property>
@@ -311,7 +311,7 @@
     <bool>true</bool>
    </attribute>
    <attribute name="horizontalHeaderDefaultSectionSize">
-    <number>127</number>
+    <number>147</number>
    </attribute>
    <attribute name="horizontalHeaderMinimumSectionSize">
     <number>50</number>
@@ -387,7 +387,7 @@
     <rect>
      <x>630</x>
      <y>20</y>
-     <width>441</width>
+     <width>501</width>
      <height>121</height>
     </rect>
    </property>
@@ -427,7 +427,7 @@
          <string>20</string>
         </property>
         <property name="maxLength">
-         <number>4</number>
+         <number>7</number>
         </property>
        </widget>
       </item>
@@ -464,7 +464,7 @@
          <string>20</string>
         </property>
         <property name="maxLength">
-         <number>4</number>
+         <number>7</number>
         </property>
        </widget>
       </item>
@@ -505,7 +505,7 @@
          <string>20</string>
         </property>
         <property name="maxLength">
-         <number>4</number>
+         <number>7</number>
         </property>
        </widget>
       </item>
@@ -542,7 +542,7 @@
          <string>20</string>
         </property>
         <property name="maxLength">
-         <number>4</number>
+         <number>7</number>
         </property>
        </widget>
       </item>
@@ -583,7 +583,7 @@
          <string>20</string>
         </property>
         <property name="maxLength">
-         <number>4</number>
+         <number>7</number>
         </property>
        </widget>
       </item>
@@ -620,7 +620,7 @@
          <string>5</string>
         </property>
         <property name="maxLength">
-         <number>4</number>
+         <number>7</number>
         </property>
        </widget>
       </item>
@@ -661,7 +661,7 @@
          <string>1000</string>
         </property>
         <property name="maxLength">
-         <number>4</number>
+         <number>7</number>
         </property>
        </widget>
       </item>
@@ -675,7 +675,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>224</width>
+          <width>250</width>
           <height>20</height>
          </size>
         </property>

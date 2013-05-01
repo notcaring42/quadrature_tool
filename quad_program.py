@@ -36,7 +36,7 @@ class QuadMethod:
     references to numerous QuadMethods
     """
     def __init__(self, top_widget, class_name, n_input,
-                 def_n=20, max_n=3000, needs_even=False):
+                 def_n=20, max_n=5000000, needs_even=False):
         """Creates a new QuadMethod
 
         Parameters
@@ -538,9 +538,6 @@ if __name__ == '__main__':
     window = Ui_main_window()
     widget = QtGui.QWidget()
     window.setupUi(widget)
-    scroll = QtGui.QScrollArea()
-    scroll.setWidget(widget)
-    scroll.widgetResizable = True
 
     # Create the canvas and add it to the window
     graph = MplCanvas(widget, QuadUpdater(widget),
@@ -549,11 +546,8 @@ if __name__ == '__main__':
                                     'graph_layout')
     graph_layout.addWidget(graph)
 
-    # Resize the window, set the window title, and then
-    # show the window
-    scroll.resize(1100, 465)
-    scroll.setWindowTitle('Pro Quadrature Viewer ZX790')
-
-    scroll.show()
+    # Set the window title and show the window
+    widget.setWindowTitle('Pro Quadrature Viewer ZX790')
+    widget.show()
 
     sys.exit(app.exec_())

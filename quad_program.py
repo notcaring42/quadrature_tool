@@ -552,7 +552,7 @@ if __name__ == '__main__':
     # Resize the window, set the window title, and then
     # show the window
     scroll.resize(1100, 465)
-    scroll.setWindowTitle('Numerical Integrator')
+    scroll.setWindowTitle('Pro Quadrature Viewer ZX790')
 
     scroll.show()
 

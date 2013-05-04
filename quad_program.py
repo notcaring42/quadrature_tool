@@ -35,15 +35,16 @@ class QuadMethod:
     The update function is actually called by QuadUpdater, which holds
     references to numerous QuadMethods
     """
-    def __init__(self, top_widget, class_name, n_input,
+    def __init__(self, ui, class_name, n_input,
                  def_n=20, max_n=5000000, needs_even=False):
         """Creates a new QuadMethod
 
         Parameters
         ----------
-        top_widget: the top level widget of the application
+        ui: the application's UI
         class_name: the name of the quadrature method's class
-        n_input: QLineEdit used to input n for this quadrature method
+        n_input: the QLineEdit used to input the 'n' value for
+            this method
         def_n: the default value for n that the quadrature method
             should use
         max_n: the maximum value for n that the quadrature method
@@ -55,11 +56,8 @@ class QuadMethod:
         -------
         a new QuadMethod
         """
-        self.lx_input = top_widget.findChild((QtGui.QLineEdit,),
-                                             'x_Left_Line_Edit')
-        self.rx_input = top_widget.findChild((QtGui.QLineEdit,),
-                                             'x_Right_Line_Edit')
-        self.function_updater = FunctionUpdater(top_widget)
+        self.lx_input = ui.x_Left_Line_Edit
+        self.rx_input = ui.x_Right_Line_Edit
         self.n_input = n_input
         self.class_name = class_name
         self.def_n = def_n
@@ -140,12 +138,12 @@ class QuadUpdater:
     This class is configured to update the QuadMethods when the
     'Update' button is clicked
     """
-    def __init__(self, top_widget):
+    def __init__(self, ui, function_updater):
         """Creates a new QuadUpdater
 
         Parameters
         ----------
-        top_widget: the top level widget of the application
+        ui: the application's UI
 
         Returns
         -------
@@ -153,21 +151,16 @@ class QuadUpdater:
         of the 'Update button'
         """
         # Create the QuadMethod dictionary
-        self.quad_methods = self.create_method_dict(top_widget)
-        self.quad_check_buttons = self.create_button_list(top_widget)
-        self.result = top_widget.findChild((QtGui.QLabel,),
-                                           'calculated_result')
-        self.error = top_widget.findChild((QtGui.QLabel,),
-                                          'error_calculated')
-        self.method_group = top_widget.findChild((QtGui.QButtonGroup,),
-                                                 'method_group')
-        self.quad_table = top_widget.findChild((QtGui.QTableWidget,),
-                                               'quad_method_table')
-        self.function_updater = FunctionUpdater(top_widget)
+        self.quad_methods = self.create_method_dict(ui)
+        self.quad_check_buttons = self.create_button_list(ui)
+        self.result = ui.calculated_result
+        self.error = ui.error_calculated
+        self.method_group = ui.method_group
+        self.quad_table = ui.quad_method_table
+        self.function_updater = function_updater
 
         # Register the update function with the update button
-        update_button = top_widget.findChild((QtGui.QPushButton,),
-                                             'update_button')
+        update_button = ui.update_button
         update_button.clicked.connect(self.update)
 
         # Call update for the first time to initialize the QuadMethods
@@ -295,56 +288,49 @@ class QuadUpdater:
             # Increment the row number
             row_number += 1
 
-    def create_button_list(self, top_widget):
+    def create_button_list(self, ui):
         """Creates a list of tuples matching quad methods with
         their corresponding checkboxes on the GUI.
 
         Parameters
         ----------
-        top_widget: the top level widget of the application
+        ui: the application's UI
 
         Returns
         -------
         a list of tuples matching quad methods with
         their corresponding checkboxes on the GUI.
         """
-        # Create kvp tuples for each QuadMethod and its key
+        # Create kvp tuples for each QuadMethod and its checkbox
         # This doesn't create a real dictionary, but instead
         # a list of tuples because the order of the elements
         # will be important (dictionaries can have an order that
         # differs from how you defined it)
         kvp = []
 
-        kvp.append(('lpr', top_widget.findChild((QtGui.QCheckBox,),
-                   'rl_check')))
+        kvp.append(('lpr', ui.rl_check))
 
-        kvp.append(('rpr', top_widget.findChild((QtGui.QCheckBox,),
-                   'rr_check')))
+        kvp.append(('rpr', ui.rr_check))
 
-        kvp.append(('mpr', top_widget.findChild((QtGui.QCheckBox,),
-                   'rm_check')))
+        kvp.append(('mpr', ui.rm_check))
 
-        kvp.append(('trap', top_widget.findChild((QtGui.QCheckBox,),
-                   'trap_check')))
+        kvp.append(('trap', ui.trap_check))
 
-        kvp.append(('simp', top_widget.findChild((QtGui.QCheckBox,),
-                   'simp_check')))
+        kvp.append(('simp', ui.simp_check))
 
-        kvp.append(('gauss', top_widget.findChild((QtGui.QCheckBox,),
-                   'gauss_check')))
+        kvp.append(('gauss', ui.gauss_check))
 
-        kvp.append(('monte', top_widget.findChild((QtGui.QCheckBox,),
-                   'monte_check')))
+        kvp.append(('monte', ui.monte_check))
 
         # Return the list
         return kvp
 
-    def create_method_dict(self, top_widget):
+    def create_method_dict(self, ui):
         """Creates the QuadMethod dictionary
 
         Parameters
         ----------
-        top_widget: the top level widget of the application
+        ui: the application's UI
 
         Returns
         -------
@@ -354,29 +340,22 @@ class QuadUpdater:
         # Create kvp tuples for each QuadMethod and its key
         kvp = []
 
-        kvp.append(('lpr', QuadMethod(top_widget, 'LeftPointRiemman',
-                   top_widget.findChild((QtGui.QLineEdit,), 'rl_n'))))
+        kvp.append(('lpr', QuadMethod(ui, 'LeftPointRiemman', ui.rl_n)))
 
-        kvp.append(('rpr', QuadMethod(top_widget, 'RightPointRiemman',
-                   top_widget.findChild((QtGui.QLineEdit,), 'rr_n'))))
+        kvp.append(('rpr', QuadMethod(ui, 'RightPointRiemman', ui.rr_n)))
 
-        kvp.append(('mpr', QuadMethod(top_widget, 'MidPointRiemman',
-                   top_widget.findChild((QtGui.QLineEdit,), 'rm_n'))))
+        kvp.append(('mpr', QuadMethod(ui, 'MidPointRiemman', ui.rm_n)))
 
-        kvp.append(('trap', QuadMethod(top_widget, 'Trapezoidal',
-                   top_widget.findChild((QtGui.QLineEdit,), 'trap_n'))))
+        kvp.append(('trap', QuadMethod(ui, 'Trapezoidal', ui.trap_n)))
 
-        kvp.append(('simp', QuadMethod(top_widget, 'Simpsons',
-                   top_widget.findChild((QtGui.QLineEdit,), 'simp_n'),
-                   needs_even=True)))
+        kvp.append(('simp', QuadMethod(ui, 'Simpsons', ui.simp_n,
+                                       needs_even=True)))
 
-        kvp.append(('gauss', QuadMethod(top_widget, 'Gaussian',
-                   top_widget.findChild((QtGui.QLineEdit,), 'gauss_n'),
-                   def_n=5, max_n=16)))
+        kvp.append(('gauss', QuadMethod(ui, 'Gaussian', ui.gauss_n,
+                                        def_n=5, max_n=16)))
 
-        kvp.append(('monte', QuadMethod(top_widget, 'MonteCarlo',
-                   top_widget.findChild((QtGui.QLineEdit,), 'monte_n'),
-                   def_n=500)))
+        kvp.append(('monte', QuadMethod(ui, 'MonteCarlo', ui.monte_n,
+                                        def_n=500)))
 
         # Create the dictionary from the list of kvp tuples
         return dict(kvp)
@@ -399,27 +378,23 @@ class FunctionUpdater:
     this class is configured to update when the 'Update' button
     is pressed
     """
-    def __init__(self, top_widget):
+    def __init__(self, ui):
         """Creates a new FunctionUpdater
 
         Parameters
         ----------
-        top_widget: the top level widget of the application
+        ui: the application's UI
 
         Returns
         -------
         a new FunctionUpdater
         """
-        self.f_input = top_widget.findChild((QtGui.QLineEdit,),
-                                            'f_input')
-        self.F_input = top_widget.findChild((QtGui.QLineEdit,),
-                                            'F_input')
+        self.f_input = ui.f_input
+        self.F_input = ui.F_input
 
-        self.tw = widget.findChild((QtGui.QTableWidget,),
-                                   'tableWidget')
+        self.tw = ui.quad_method_table
         # Register the update function with the update button
-        update_button = top_widget.findChild((QtGui.QPushButton,),
-                                             'update_button')
+        update_button = ui.update_button
         update_button.clicked.connect(self.update)
 
         # Call update for the first time to initialize f and F
@@ -469,24 +444,20 @@ class MplCanvas(FigureCanvas):
     this class re-computes the figure every time the 'Update'
     button is pressed
     """
-    def __init__(self, top_widget, quad_updater, function_updater,
-                 parent=None, width=5, height=4, dpi=100):
+    def __init__(self, ui, parent=None, width=5,
+                 height=4, dpi=100):
         """Creates a new MplCanvas
 
         Parameters
         ----------
-        top_widget: the top level widget of the application
-        quad_updater: instance of QuadUpdater used to grab
-            currently active quadrature
-        function_updater: instance of FunctionUpdater used to
-            graph f(x)
+        ui: the application's ui
 
         Returns
         -------
         a new MplCanvas
         """
-        self.quad_updater = quad_updater
-        self.function_updater = function_updater
+        self.function_updater = FunctionUpdater(ui)
+        self.quad_updater = QuadUpdater(ui, self.function_updater)
 
         # Create a matplotlib figure
         self.fig = Figure(figsize=(width, height), dpi=dpi)
@@ -500,8 +471,7 @@ class MplCanvas(FigureCanvas):
         FigureCanvas.updateGeometry(self)
 
         # Register the update_figure function with the update button
-        update_button = top_widget.findChild((QtGui.QPushButton,),
-                                             'update_button')
+        update_button = ui.update_button
         update_button.clicked.connect(self.update_figure)
 
         # Call update_figure for the first time to initialize
@@ -529,25 +499,21 @@ class MplCanvas(FigureCanvas):
 
         self.draw()
 
+
+class Application(QtGui.QMainWindow):
+    def __init__(self, parent=None):
+        QtGui.QMainWindow.__init__(self, parent)
+        self.ui = Ui_main_window()
+        self.ui.setupUi(self)
+
+        graph = MplCanvas(self.ui)
+        self.ui.graph_layout.addWidget(graph)
+
+
 # Entry point for the application
 if __name__ == '__main__':
-    # Initialize the application and its window
-    # We add the main window to a scroll area to
-    # add scroll functionality
+    # Create the application and its window
     app = QtGui.QApplication(sys.argv)
-    window = Ui_main_window()
-    widget = QtGui.QWidget()
-    window.setupUi(widget)
-
-    # Create the canvas and add it to the window
-    graph = MplCanvas(widget, QuadUpdater(widget),
-                      FunctionUpdater(widget))
-    graph_layout = widget.findChild((QtGui.QVBoxLayout,),
-                                    'graph_layout')
-    graph_layout.addWidget(graph)
-
-    # Set the window title and show the window
-    widget.setWindowTitle('Pro Quadrature Viewer ZX790')
-    widget.show()
-
+    window = Application()
+    window.show()
     sys.exit(app.exec_())

@@ -104,6 +104,11 @@ class QuadMethod:
             n = self.max_n
             self.n_input.setText(str(self.max_n))
 
+        # Ensure n >= 1
+        if n < 1:
+            n = 1
+            self.n_input.setText(str(1))
+
         # If the method needs an even n and if n is odd,
         # set the default n
         if self.needs_even and n % 2 == 1:

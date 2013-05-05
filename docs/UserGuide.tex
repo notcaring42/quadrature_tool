@@ -72,8 +72,78 @@ The numerical methods included are (in order of accuracy):
 
 \nextsubsection{i. Using the GUI} 
 
-\newLine The \appname interface has been designed for ease of use and dynamic comparison of the various quadrature methods supported by the program. In general, the program is broken up into a few sections:
+\newLine The \appname \,interface has been designed for ease of use and dynamic comparison of the various quadrature methods supported by the program. In general, the program is broken up into the following sections and components:
 
+\begin{description}
+\item[1. Function Graph] The graph of the function, as well as the polygons used for quadrature
+\item[2. Function Input] Used to input the function to be graphed, as well as its (optional) antiderivative for error analysis
+\item[3. Graph Result and Error] Result and error for the function, using the active quadrature method (selected by the active method selector)
+\item[4. Active Method Selector] Used to select the quadrature method to use when graphing the function
+\item[5. X-Bound Selector] Used to define the left and right x-bounds for use in quadrature
+\item[6. Update Button] When clicked, this updates the GUI to reflect new selections made and updated values
+\item[7. Method Selection] Used to select which methods should have results displayed in the table, as well as defining n values for each quadrature method
+\item[8. Results Table] Shows results, error (if applicable), and time taken for each quadrature method that was checked off in method selection
+\end{description}
+
+\begin{center}
+\includegraphics[scale=0.3]{uiOverview.png} \\
+\small A labeled overview of the UI. Numbers correspond to the elements listed above.
+\normalsize
+\end{center}
+
+\newLine To better explain how elements work, it will be good to go through an example workflow, in which we will define a function, its antiderivative, choose different methods to graph, try different x and n values, and finally compare different methods to see which is the fastest and most accurate. Along the way, there will be some helpful notes and caveats about the GUI elements, so this will serve as a good tutorial and reference as well as an example.
+
+\newLine To begin, let's define a new function to graph, perhaps the cubic function \begin{equation*}
+	x^3 + 2x^2 + 3
+\end{equation*} which has an antiderivative defined as
+\begin{equation*}
+	\frac{x^4}{4} + 2\frac{x^3}{3} + 3x
+\end{equation*}
+The first step will be to define the function for the program. Under the graph, find the label \emph{f(x)} and input \emph{x\textasciicircum 3+2*x\textasciicircum 2+3} into the text box. Input the function's antiderivative, \emph{x\textasciicircum 4/4+2*(x\textasciicircum 3/3)+3x} into the text box below, labeled \emph{F(x)}. Now, look for the \emph{Update} button to the right of the function inputs, and press it. You should see the function and the quadrature method's polygons that it used to integrate it displayed in the graph view, as well as the result and error for integration using that quadrature method under the function inputs. Before we continue, here's a few notes about function input:
+\begin{enumerate}[\indent 1.]
+\item Express powers using the \textasciicircum character, even though this a python program. The program will turn the \textasciicircum characters into valid ** python operators.
+\item Besides the above caveat about powers, functions should use valid python expressions (i.e. \emph{3*x} is correct, whilst \emph{3x} will not be parsed correctly and you'll get an error
+\item Whitespace is allowed, the program has no trouble parsing it
+\item You can use parentheses as you would in a real mathematical expression to affect the order of operations, as well as just to make inputs easier on the eyes
+\item You can use any valid numpy mathematical functions and constants in your function definition (i.e. \emph{sin(x+pi)} is valid, as is \emph{log(x)}. You may get some terminal errors when you graph functions that are not defined for all real x values (like \emph{log}), but this will not interfere with the graph or the results.
+\end{enumerate}
+
+\begin{center}
+\includegraphics[scale=0.3]{graphingExample.png}
+\small Inputting the function and updating the graph.
+\normalsize
+\end{center}
+
+\newLine Now that we know about function input, it's time to address the ugly elephant in the room: the error for the quadrature method we used on this function is huge! Riemman methods aren't exactly famous for their accuracy, especially ones which use the left or right endpoint. We can see from the graph just how inaccurate that is. We'd probably get a better result using the midpoint. The method that is currently being graphed is called the \emph{active} quadrature method, and we can change it by selecting one of the radio buttons to the right of the graph. Select \emph{Riemman (Mid)} from the list, and hit the update button. The graph will update to reflect the current method, and so will the results below the function inputs. That error is much better, but let's improve it even further! In quadrature, the more polygons you use, the more accurate the results. We call the number of polygons to use \emph{n}. Let's increase our \emph{n} value to get even more accurate results. To the right of the radio buttons is the list of methods again, but with an input for the \emph{n} value and a checkbox. We'll ignore the checkboxes for now, but we'll use the text input to change the \emph{n} value. Note that each method has its own \emph{n} input: that's because some methods have special restrictions on the \emph{n} values they can use: the details of that will be explained in the section after this one. With all that being said, look for the label \emph{Riemman (Mid)} and go to the text box to its right. Change \emph{n} from 20 to 100 and hit update. The graph will update along with the results, which include a much lower error. Before we move on, let's discuss some of the special \emph{n} limits in \appname :
+\begin{enumerate}[\indent 1.]
+\item ALL methods have a maximum limit of 5,000,000
+\item \emph{n} must be greater than or equal to 1, for obvious reasons
+\item Simpsons' Rule only accepts even \emph{n} values.
+\item Gaussian quadrature only accepts \emph{n} up to 16
+\item Any attempt to set to \emph{n} to an illegal value will cause a reset to a legal value
+\end{enumerate}
+
+\begin{center}
+\includegraphics[scale=0.3]{nInputExample.png}
+\small Updating the \emph{n} value for the quadrature method
+\normalsize
+\end{center}
+
+\newLine You can also change the x bounds to integrate over different intervals. You can set both the left and right x bounds in the two text boxes located above the update button. There's not much to it. The only thing to keep in mind is that if you set the left x bound to be greater than the right, then the x-axis on the graph will be reversed, and the numerical results will reflect that switch. Try making the interval non-symmetrical by setting the left x bound to -10, and see how that changes the result and the graph.
+
+\begin{center}
+\includegraphics[scale=0.3]{xBoundsExample.png}
+\small Changing x bounds for the interval
+\normalsize
+\end{center}
+
+\newLine There's one final part of the program to talk about: the results table off to the right. This table can be used to run multiple quadrature methods on the function at the same time and compare results. The labels on the left side of the table correspond to the abbreviations of the quadrature methods. Let's compare all of the methods at the same time. To mark a quadrature method for display, go to the list above the table (where we previously inputted \emph{n} values) and mark each checkbox. Each method that is checked will be run on the next update and the results displayed in the table. The integration result and the time taken to run the method will always be shown, along with the error value if an antiderivative is set. After checking all the methods, hit update to populate the results table. Now, you can compare methods to see which is the most accurate and which is the fastest. Remember that you don't have to check all of them: you can check only the ones which you want to know about if you so desire.
+
+\begin{center}
+\includegraphics[scale=0.3]{tableExample.png}
+\small Populating the table with results from multiple methods
+\normalsize
+\end{center}
 
 \nextsubsection{ii. Limits and Parameters of the Numerical Methods}
 

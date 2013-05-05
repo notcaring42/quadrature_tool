@@ -747,39 +747,33 @@ class MonteCarlo:
             #   multiplying by min_value assures a negative number.
             self.approx = ratio * min_value * (b - a)
         # If the function is both negative and positive at different
-        #   points, make different
+        #   points, make different Monte Carlos.
         else:
             # Make an array of n random numbers.
             bigRand = np.random.rand(n)
 
-            # Find an approximate area for the sections above the
-            #   x-axis.
-            y_pts_over_zero = y_pts >= 0
-            sum_over_zero = np.sum(y_pts_over_zero)
-            rand_over_zero = np.zeros(n)
-            rand_over_zero[y_pts_over_zero] = (bigRand[y_pts_over_zero] *
-                                               max_value)
-            ratio_over_zero = float(np.sum(rand_over_zero[y_pts_over_zero] <=
-                                    y_pts[y_pts_over_zero])) / sum_over_zero
-            area_over_zero = ratio_over_zero * (b - a) * (sum_over_zero / n *
-                                                          max_value)
-            # Find an approximate area for the sections below the x-axis.
-            y_pts_under_zero = y_pts < 0
-            sum_under_zero = np.sum(y_pts_under_zero)
-            rand_under_zero = np.zeros(n)
-            rand_under_zero[y_pts_under_zero] = (bigRand[y_pts_under_zero] *
-                                                 min_value)
-            ratio_under_zero = float(np.sum(rand_under_zero
-                                            [y_pts_under_zero] >=
-                                            y_pts[y_pts_under_zero]) /
-                                     sum_under_zero)
-            area_under_zero = ratio_under_zero * (b - a) * (sum_under_zero /
-                                                            n * min_value)
+            # Find an approximate area for the sections above the x-axis.
+            yPtsOverZero = y_pts >= 0
+            sumOverZero = np.sum(yPtsOverZero)
+            randOverZero = np.zeros(n)
+            randOverZero[yPtsOverZero] = bigRand[yPtsOverZero]*max_value
+            ratioOverZero = float(np.sum(randOverZero[yPtsOverZero] <=
+                                  y_pts[yPtsOverZero]))/sumOverZero
+            areaOverZero = ratioOverZero*(b - a)*sumOverZero/n*max_value
 
-            # Stores the approximated area under the curve and the
-            #   random values used.
-            self.rand = rand_over_zero + rand_under_zero
-            self.approx = area_over_zero + area_under_zero
+            # Find an approximate area for the sections below the x-axis.
+            yPtsUnderZero = y_pts < 0
+            sumUnderZero = np.sum(yPtsUnderZero)
+            randUnderZero = np.zeros(n)
+            randUnderZero[yPtsUnderZero] = bigRand[yPtsUnderZero]*min_value
+            ratioUnderZero = float(np.sum(randUnderZero[yPtsUnderZero] >=
+                                   y_pts[yPtsUnderZero]))/sumUnderZero
+            areaUnderZero = ratioUnderZero*(b - a)*sumUnderZero/n*min_value
+
+            # Stores the approximated area under the curve and the random
+            #     values used.
+            self.rand = randOverZero + randUnderZero
+            self.approx = areaOverZero + areaUnderZero
 
         # Finish timing the approximation.
         end = time.time()

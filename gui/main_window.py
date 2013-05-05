@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Sat May  4 20:28:54 2013
+# Created: Sat May  4 21:06:40 2013
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_main_window(object):
     def setupUi(self, main_window):
         main_window.setObjectName(_fromUtf8("main_window"))
-        main_window.resize(1077, 461)
+        main_window.resize(1159, 461)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -137,7 +137,7 @@ class Ui_main_window(object):
         self.results_horiz.addLayout(self.error_horiz)
         self.function_layout.addLayout(self.results_horiz)
         self.quad_method_table = QtGui.QTableWidget(main_window)
-        self.quad_method_table.setGeometry(QtCore.QRect(630, 160, 440, 279))
+        self.quad_method_table.setGeometry(QtCore.QRect(630, 160, 501, 279))
         self.quad_method_table.setMinimumSize(QtCore.QSize(0, 0))
         self.quad_method_table.setSizeIncrement(QtCore.QSize(0, 0))
         self.quad_method_table.setAutoFillBackground(False)
@@ -168,7 +168,7 @@ class Ui_main_window(object):
         item = QtGui.QTableWidgetItem()
         self.quad_method_table.setHorizontalHeaderItem(2, item)
         self.quad_method_table.horizontalHeader().setVisible(True)
-        self.quad_method_table.horizontalHeader().setDefaultSectionSize(127)
+        self.quad_method_table.horizontalHeader().setDefaultSectionSize(147)
         self.quad_method_table.horizontalHeader().setMinimumSectionSize(50)
         self.quad_method_table.horizontalHeader().setStretchLastSection(False)
         self.quad_method_table.verticalHeader().setDefaultSectionSize(36)
@@ -176,7 +176,7 @@ class Ui_main_window(object):
         self.quad_method_table.verticalHeader().setMinimumSectionSize(30)
         self.quad_method_table.verticalHeader().setStretchLastSection(False)
         self.verticalLayoutWidget_5 = QtGui.QWidget(main_window)
-        self.verticalLayoutWidget_5.setGeometry(QtCore.QRect(630, 20, 441, 121))
+        self.verticalLayoutWidget_5.setGeometry(QtCore.QRect(630, 20, 501, 121))
         self.verticalLayoutWidget_5.setObjectName(_fromUtf8("verticalLayoutWidget_5"))
         self.method_comparison_layout = QtGui.QVBoxLayout(self.verticalLayoutWidget_5)
         self.method_comparison_layout.setMargin(0)
@@ -195,7 +195,7 @@ class Ui_main_window(object):
         self.rl_n_label.setObjectName(_fromUtf8("rl_n_label"))
         self.rl_rr_horiz_layout.addWidget(self.rl_n_label)
         self.rl_n = QtGui.QLineEdit(self.verticalLayoutWidget_5)
-        self.rl_n.setMaxLength(4)
+        self.rl_n.setMaxLength(7)
         self.rl_n.setObjectName(_fromUtf8("rl_n"))
         self.rl_rr_horiz_layout.addWidget(self.rl_n)
         self.rr_label = QtGui.QLabel(self.verticalLayoutWidget_5)
@@ -210,7 +210,7 @@ class Ui_main_window(object):
         self.rr_n_label.setObjectName(_fromUtf8("rr_n_label"))
         self.rl_rr_horiz_layout.addWidget(self.rr_n_label)
         self.rr_n = QtGui.QLineEdit(self.verticalLayoutWidget_5)
-        self.rr_n.setMaxLength(4)
+        self.rr_n.setMaxLength(7)
         self.rr_n.setObjectName(_fromUtf8("rr_n"))
         self.rl_rr_horiz_layout.addWidget(self.rr_n)
         self.method_comparison_layout.addLayout(self.rl_rr_horiz_layout)
@@ -228,7 +228,7 @@ class Ui_main_window(object):
         self.rm_n_label.setObjectName(_fromUtf8("rm_n_label"))
         self.rm_trap_horiz_layout.addWidget(self.rm_n_label)
         self.rm_n = QtGui.QLineEdit(self.verticalLayoutWidget_5)
-        self.rm_n.setMaxLength(4)
+        self.rm_n.setMaxLength(7)
         self.rm_n.setObjectName(_fromUtf8("rm_n"))
         self.rm_trap_horiz_layout.addWidget(self.rm_n)
         self.trap_label = QtGui.QLabel(self.verticalLayoutWidget_5)
@@ -243,7 +243,7 @@ class Ui_main_window(object):
         self.trap_n_label.setObjectName(_fromUtf8("trap_n_label"))
         self.rm_trap_horiz_layout.addWidget(self.trap_n_label)
         self.trap_n = QtGui.QLineEdit(self.verticalLayoutWidget_5)
-        self.trap_n.setMaxLength(4)
+        self.trap_n.setMaxLength(7)
         self.trap_n.setObjectName(_fromUtf8("trap_n"))
         self.rm_trap_horiz_layout.addWidget(self.trap_n)
         self.method_comparison_layout.addLayout(self.rm_trap_horiz_layout)
@@ -261,7 +261,7 @@ class Ui_main_window(object):
         self.simp_n_label.setObjectName(_fromUtf8("simp_n_label"))
         self.simp_gauss_horiz_layout.addWidget(self.simp_n_label)
         self.simp_n = QtGui.QLineEdit(self.verticalLayoutWidget_5)
-        self.simp_n.setMaxLength(4)
+        self.simp_n.setMaxLength(7)
         self.simp_n.setObjectName(_fromUtf8("simp_n"))
         self.simp_gauss_horiz_layout.addWidget(self.simp_n)
         self.gauss_label = QtGui.QLabel(self.verticalLayoutWidget_5)
@@ -276,7 +276,7 @@ class Ui_main_window(object):
         self.gauss_n_label.setObjectName(_fromUtf8("gauss_n_label"))
         self.simp_gauss_horiz_layout.addWidget(self.gauss_n_label)
         self.gauss_n = QtGui.QLineEdit(self.verticalLayoutWidget_5)
-        self.gauss_n.setMaxLength(4)
+        self.gauss_n.setMaxLength(7)
         self.gauss_n.setObjectName(_fromUtf8("gauss_n"))
         self.simp_gauss_horiz_layout.addWidget(self.gauss_n)
         self.method_comparison_layout.addLayout(self.simp_gauss_horiz_layout)
@@ -294,10 +294,10 @@ class Ui_main_window(object):
         self.mont_n_label.setObjectName(_fromUtf8("mont_n_label"))
         self.monte_horiz_layout.addWidget(self.mont_n_label)
         self.monte_n = QtGui.QLineEdit(self.verticalLayoutWidget_5)
-        self.monte_n.setMaxLength(4)
+        self.monte_n.setMaxLength(7)
         self.monte_n.setObjectName(_fromUtf8("monte_n"))
         self.monte_horiz_layout.addWidget(self.monte_n)
-        spacerItem = QtGui.QSpacerItem(224, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        spacerItem = QtGui.QSpacerItem(254, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.monte_horiz_layout.addItem(spacerItem)
         self.method_comparison_layout.addLayout(self.monte_horiz_layout)
 

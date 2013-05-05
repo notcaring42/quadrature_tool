@@ -147,15 +147,81 @@ The first step will be to define the function for the program. Under the graph, 
 
 \nextsubsection{ii. Limits and Parameters of the Numerical Methods}
 
-\newLine  Jorge, this is the section that I want you to write.
+\newLine\noindent  \textbf{Riemman Summations}
 
-This subsection will be written by John and Jorge and will discuss the inputs for each numerical method in a little more detail. It should present the quadrature method in summation form with the error term where applicable (I can just paste that in at the end). It should include a note about the highest degree Polynomial that can be computed perfectly by that method. 
+Left-Endpoint, Right-Endpoint, and Midpoint Riemman Summations work by creating rectangles using the height at the left-most, right-most, or midpoint, respectfully, over an interval $[a,b]$. The interval is divided into $n$ subintervals of the same length to create $n$ rectangles. The input from the GUI is the number of rectangles, or subintervals. The formulas are:
 
-So write something like:
+\newLine\noindent Left-endpoint:
+\begin{equation*} 
+\integral{a}{b}{f(x)} = h\summation{i = 0}{n - 1}{f(x_i)} + \frac{h}{2}(b-a)f'(\mu),
+\end{equation*}
 
-\newLine Left-Endpoint Riemman Summation works by creating rectangles with height at the left-most part of the subinterval to approximate the integral. It follows the followng formula:
-\begin{equation*} \integral{a}{b}{f(x)} = h\summation{i = 0}{n - 1}{f(x_i)} + \frac{h}{2}(b-a)f'(\mu), \end{equation*}
-where $\mu\in[a,b]$. (Jorge, note that the $n$ in the summation is not the number of subintervals, as defined in the GUI. Think of a simple way to let the reader know that). It can integrate any polynomial of degree 0 perfectly. 
+\noindent Right-endpoint:
+\begin{equation*} 
+\integral{a}{b}{f(x)} = h\summation{i = 1}{n}{f(x_i)} - \frac{h}{2}(b-a)f'(\mu),
+\end{equation*}
+
+\noindent Midpoint:
+\begin{equation*} \integral{a}{b}{f(x)} = h\summation{i=0}{n-1}{f(x_i)} + \frac{h^2}{24}(b-a)f''(\mu), \end{equation*}
+where $\mu\in[a,b]$.
+
+Left-endpoint and Right-endpoint can only integrate a polynomial of degree 0 (constant) perfectly. On the other hand, Midpoint Riemman can calculate polynomials of degree 1 (linear) perfectly.
+
+\newLine\noindent \textbf{Monte Carlo Integration}
+
+Monte Carlo is the only method of approximation that we used that is not a quadrature method. It works in this way:
+
+Imagine that you throw darts at the graph of a function. Some darts would land in the area we want to calculate and the rest would land elsewhere (inside the bounding box). We use that to calculate
+
+\begin{equation*} \frac{\textit{Number of darts in the area}}{\textit{Total number of darts}}. \end{equation*}
+
+\newLine\noindent That ratio is approximately $\frac{\textit{Area between the curve and the x-axis}}{\textit{Area taken up by the bounding box}}$, so we multiply by the area of the bounding box to get the area between the curve and the x-axis. 
+
+The $n$ value obtained from the user will represent the number of darts. This number will be much higher than the $n$ value for the quadrature methods. The logic is the same though, the higher $n$ is, the more accurate the approximation will be. The user must keep in mind that the landing spots of the darts are randomly generated, which means that the precision of the method is random too. Sometimes, even with a high number of darts, the approximation is not great. We suggest to run this method several times and then calculate an average of the calculations.
+
+\newLine\noindent  \textbf{Composite Trapezoidal Rule}
+
+The Composite Trapezoidal Rule is an intuitive method of finding the area under the curve. It approximates the area with a series of trapezoids that lie evenly spaced over the interval $[a,b]$.
+In our case, the interval $[a,b]$ is subdivided into n subintervals $[x_n, x_{n+1}]$ of width $h = \frac{b-a}{n}$ by using the equally spaced nodes $x_n = a + ih$ for $i = 0,1,...,n$ using the following formula:
+\begin{equation*} 
+\integral{a}{b}{f(x)} = \frac{h}{2}\Big(f(x_0) + 2\summation{i = 1}{n-1}{f(x_i)} + f(x_n)\Big) - \frac{h^2}{12}(b-a)f''(\mu).
+\end{equation*}
+where $\mu\in[a,b]$.
+
+Keep in mind that the number $n$ provided as input is the number of trapezoids used for the approximation. This means the interval $[a,b]$ would be divided into $n$ subintervals using $n+1$ evaluations. This method can integrate any polynomial of degree 1 (linear) perfectly.
+
+\newLine\noindent\textbf{Composite Simpsons Rule}
+
+Composite Simpsons Rule is a quadrature method that creates quadratic fits using sets of 3 points at a time. Since it uses a set of 3 points, the number of evaluations will always be odd and the number of fits will be even. If the $n$ value provided by the user is not even, the code will calculate a new $n$ value, $n-1$. The input from the application is 2 times the number of quadratic fits. The formula for Composite Simpsons Rule is:
+\begin{equation*}  \integral{a}{b}{f(x)} = \frac{h}{3}\Big(f(x_0) + 4\summation{i=0}{\floor{\frac{n}{2}}}{f(x_{2i+1})} + 2\summation{i=1}{\floor{\frac{n}{2}}-1}{f(x_{2i})} + f(x_n)\Big) + \frac{h^4}{180}(b-a)f^{(4)}(\mu),
+\end{equation*}
+where $\mu\in[a,b]$.
+
+It would appear that this method can only integrate polynomials of degree 2 perfectly, but it actually perfectly approximates the integral of any polynomial of degree 3.
+
+\newLine\noindent\textbf{Gaussian-Legendre Quadrature}
+
+The main difference between this method and the others is that it does not use equally spaced subintervals. It instead chooses the most optimal values in the interval. It uses the general formula
+
+\begin{equation*} \integral{-1}{1}{f(x)} = \summation{k=0}{n}{c_kf(x_k)},
+\end{equation*}
+where $x_k$ is a root of the $n^{\text{th}}$ Legendre Polynomial and the coefficients are the Lagrange Polynomial weights integrated from $-1$ to 1, $c_k=\displaystyle\integral{-1}{1}{\prod_{\scriptstyle j=0\atop j\neq k}^n\frac{x-x_j}{x_k-x_j}}$.
+
+As we can see in the formula, the limits of the interval are -1 and 1 which means that we need to apply the linear transformation:
+
+\begin{eqnarray*} z &=& \frac{b-a}{2}x + \frac{b+a}{2}, \\
+dz &=& \frac{b-a}{2}dx,
+\end{eqnarray*}
+which yields the final equation
+
+\begin{eqnarray*}
+\int^a_b f(z)dz &=& \frac{b-a}{2}\summation{i = k}{n}{c_kf(\frac{b-a}{2}x_k + \frac{b+a}{2})}.
+\end{eqnarray*}
+
+Gaussian-Legendre Quadrature uses a list of pre-calculated optimal nodes (roots) and coefficients to approximate the integral. The code to calculate the optimal values have been avoided because the values are well known and are available to anyone. 
+
+This method can perfectly integrate any polynomials of degree $2n-1$, where $n$ is the number of roots and coefficients used for the approximation. \appname\, stores $n$ values up to 16, which would allow it to perfectly integrate any polynomial up to degree 31.
+
 \nextsection{2. Mathematical Background}
 
 This section is for the user who wants to see where these methods come from. A prerequisite to understanding the methods would be Calculus 1 and 2. In particular: definite integrals, derivatives, and Taylor Expansions. 
@@ -411,7 +477,7 @@ $\integral{-2}{7}{\sin{x}+x+5}$ with 5 nodes. \normalsize
 
 \nextsubsection{i. Limitations}
 
-\newLine One limitation of \appname\,  is that it only approximates integrals of 1 dimension. It turns out that approximating 2 dimensional integrals is pretty much just using the formula twice, once over each dimension. This is not something that can be done by \appname\, though. Any introductory book on numerical analysis will go over it in more detail for the curious reader.
+\newLine One limitation of \appname\,  is that it only approximates integrals of 1 dimension. It turns out that approximating 2 dimensional integrals is pretty much just using the formula twice, once over each dimension. This is not something that can be done by \appname\, though. It should be noted that this requires $\mathcal{O}(n^k)$, where $k$ is the number of integrals, function evaluations for all the quadrature methods. This is why at a certain point, Monte Carlo tends to beat the other methods in terms of efficiency when there are many integrals to be evaluated. Any introductory book on numerical analysis will go over it in more detail for the curious reader.
 
 \newLine A bigger limitation though is that we don't have an option for the user to input a tolerance and have \appname\, go until that tolerance is met and display the $n$ that was needed. The reason we don't have this is because our code works by using NUMPY's array arithmetic. This is a much faster way of doing the quadrature methods than using an explicit for-loop. If we wanted to allow the user to enter a tolerance, that would require an explicit for-loop, which would be very slow. There is something called Adaptive Quadrature though that will approximate the integral to a certain tolerance and still uses array arithmetic. This wasn't included because it creates in own $n$ value based on relative errors and it would make it hard to compare to the other methods.
 

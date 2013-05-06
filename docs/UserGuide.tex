@@ -61,7 +61,6 @@ The numerical methods included are (in order of accuracy):
 	\item Limitations
 	\item Extensions
 	\end{enumerate}
-\item Sources and Credits
 \end{enumerate}
 
 
@@ -71,6 +70,8 @@ The numerical methods included are (in order of accuracy):
 \newLine This section of the user's guide is written for people who just want to get things going and see some results. It's the recommended section to start with and almost a prerequisite to using \appname. If you don't care about the mathematical underpinnings of the numerical methods, then it's the only section you'll need to read. The math is fun though, so you really should at least glaze over it!
 
 \nextsubsection{i. Using the GUI} 
+
+\newLine This subsection should mostly be written by Max and will explain how to use the GUI correctly and efficiently, including the allowed values for each numerical method.
 
 \newLine The \appname \,interface has been designed for ease of use and dynamic comparison of the various quadrature methods supported by the program. In general, the program is broken up into the following sections and components:
 
@@ -106,6 +107,8 @@ The first step will be to define the function for the program. Under the graph, 
 \item Whitespace is allowed, the program has no trouble parsing it
 \item You can use parentheses as you would in a real mathematical expression to affect the order of operations, as well as just to make inputs easier on the eyes
 \item You can use any valid numpy mathematical functions and constants in your function definition (i.e. \emph{sin(x+pi)} is valid, as is \emph{log(x)}. You may get some terminal errors when you graph functions that are not defined for all real x values (like \emph{log}), but this will not interfere with the graph or the results.
+\item If you know the exact value of the integral, $\mathcal{I}$, you're trying to approximate, but not the actual anti-derivative, then use \begin{equation*} F(x) = \frac{\mathcal{I}}{b - a}x \end{equation*}
+in place of the actual anti-derivative.
 \end{enumerate}
 
 \begin{center}
@@ -193,7 +196,7 @@ Keep in mind that the number $n$ provided as input is the number of trapezoids u
 \newLine\noindent\textbf{Composite Simpsons Rule}
 
 Composite Simpsons Rule is a quadrature method that creates quadratic fits using sets of 3 points at a time. Since it uses a set of 3 points, the number of evaluations will always be odd and the number of fits will be even. If the $n$ value provided by the user is not even, the code will calculate a new $n$ value, $n-1$. The input from the application is 2 times the number of quadratic fits. The formula for Composite Simpsons Rule is:
-\begin{equation*}  \integral{a}{b}{f(x)} = \frac{h}{3}\Big(f(x_0) + 4\summation{i=0}{\floor{\frac{n}{2}}}{f(x_{2i+1})} + 2\summation{i=1}{\floor{\frac{n}{2}}-1}{f(x_{2i})} + f(x_n)\Big) + \frac{h^4}{180}(b-a)f^{(4)}(\mu),
+\begin{equation*}  \integral{a}{b}{f(x)} = \frac{h}{3}\Big(f(x_0) + 4\summation{i=0}{\floor{\frac{n}{2}}-1}{f(x_{2i+1})} + 2\summation{i=1}{\floor{\frac{n}{2}}-1}{f(x_{2i})} + f(x_n)\Big) - \frac{h^4}{180}(b-a)f^{(4)}(\mu),
 \end{equation*}
 where $\mu\in[a,b]$.
 
@@ -331,7 +334,8 @@ If we pretend that $\mu_L \approx \mu_R = \mu$, then what would happen if we add
 &=& \frac{h}{2}\Big(f(x_0) + (2f(x_1) + 2f(x_2) + \cdots + 2f(x_{n-1})) + f(x_n)\Big) \\
 &=& \frac{h}{2}\Big(f(x_0) + 2\summation{i=1}{n-1}f(x_i) + f(x_n)\Big).
 \end{eqnarray*}
-This is called the Composite Trapezoidal Rule. The method of getting a better approximation from combining 2 or more worse approximations is called extrapolation and is a very common and useful technique in numerical analysis and mathematics in general. Through another method, we can obtain a remainder term and the general form of the Composite Trapezoidal Rule,
+This is called the Composite Trapezoidal Rule. The method of getting a better approximation from combining 2 or more worse approximations is called extrapolation and is a very common and useful technique in numerical analysis and mathematics in general. Through another method\footnote{The formula is taken from the 9th edition introductory Numerical Analysis textbook by Richard L. Burden and J. Douglas Faires, page 206.}
+, we can obtain a remainder term and the general form of the Composite Trapezoidal Rule,
 
 \begin{equation*} 
 \integral{a}{b}{f(x)} = \frac{h}{2}\Big(f(x_0) + 2\summation{i = 1}{n-1}{f(x_i)} + f(x_n)\Big) - \frac{h^2}{12}(b-a)f''(\mu).
@@ -402,9 +406,9 @@ By the remainder term, we can see that it approximates any linear polynomial per
 
 $\integral{-5}{5}{e^{-\frac{x^2}{2}}}$ with 3 quadratic fits.\normalsize
 \end{center}
-The formula for the Composite Simpsons Rule will be presented here without any sort of proof outline as it is a little advanced for the target audience of this User's Guide:
+The formula for the Composite Simpsons Rule will be presented here without any sort of proof outline as it is a little advanced for the target audience of this User's Guide\footnote{The formula is taken from the 9th edition introductory Numerical Analysis textbook by Richard L. Burden and J. Douglas Faires, page 206.}:
 
-\begin{equation*}  \integral{a}{b}{f(x)} = \frac{h}{3}\Big(f(x_0) + 4\summation{i=0}{\floor{\frac{n}{2}}}{f(x_{2i+1})} + 2\summation{i=1}{\floor{\frac{n}{2}}-1}{f(x_{2i})} + f(x_n)\Big) + \frac{h^4}{180}(b-a)f^{(4)}(\mu). 
+\begin{equation*}  \integral{a}{b}{f(x)} = \frac{h}{3}\Big(f(x_0) + 4\summation{i=0}{\floor{\frac{n}{2}}-1}{f(x_{2i+1})} + 2\summation{i=1}{\floor{\frac{n}{2}}-1}{f(x_{2i})} + f(x_n)\Big) - \frac{h^4}{180}(b-a)f^{(4)}(\mu). 
 \end{equation*}
 The formula above looks confusing, but all it really is is a complex way of writing
 \begin{equation*}  \integral{a}{b}{f(x)} \approx \frac{h}{3}\big(f(x_0) + 4f(x_1)+2f(x_2)+4f(x_3)+\cdots+2f(x_{n-2})+4f(x_{n-1})+f(x_n)\big).
@@ -459,9 +463,11 @@ dz &=& \frac{b-a}{2}dx
 
 This definition makes it obvious that we can generate Quadrature formulas using $n$ nodes to integrate a polynomial of degree $2n-1$ perfectly. 
 
-We can generate all the nodes and coefficients needed as above, but other's have already done that work, so it's more efficient to just take their lists.
+We can generate all the nodes and coefficients needed as above, but other's have already done that work, so it's more efficient to just take their lists\footnote{The nodes and weights in \appname\, are taken from
 
-\newLine There's another way of viewing Gaussian-Legendre quadrature though, which lends itself much better to the pictorial sense. It turns out that Gaussian-Legendre Quadrature is equivalent to integrating a Polynomial fit that has nodes at the roots of the $n^{\text{th}}$ Legendre Polynomial. That's a much more abstract definition, but it works well for allowing the user to see what Guassian Legendre actually does. Here's an example:
+\texttt{http://www-troja.fjfi.cvut.cz/~klimo/nm/c8/legpoly.pdf}.}.
+
+\newLine There's another way of viewing Gaussian-Legendre quadrature though, which lends itself much better to the pictorial sense. It turns out that Gaussian-Legendre Quadrature is equivalent to integrating a Polynomial fit that has nodes at the roots of the $n^{\text{th}}$ Legendre Polynomial\footnote{This is proven in the 9th edition introductory Numerical Analysis textbook by Richard L. Burden and J. Douglas Faires, page 231-232, Theorem 4.7.}. That's a much more abstract definition, but it works well for allowing the user to see what Guassian Legendre actually does. Here's an example:
 
 \begin{center}
 \includegraphics[scale=0.5]{sinXplusXgaussian.png}
@@ -477,7 +483,7 @@ $\integral{-2}{7}{\sin{x}+x+5}$ with 5 nodes. \normalsize
 
 \nextsubsection{i. Limitations}
 
-\newLine One limitation of \appname\,  is that it only approximates integrals of 1 dimension. It turns out that approximating 2 dimensional integrals is pretty much just using the formula twice, once over each dimension. This is not something that can be done by \appname\, though. It should be noted that this requires $\mathcal{O}(n^k)$, where $k$ is the number of integrals, function evaluations for all the quadrature methods. This is why at a certain point, Monte Carlo tends to beat the other methods in terms of efficiency when there are many integrals to be evaluated. Any introductory book on numerical analysis will go over it in more detail for the curious reader.
+\newLine One limitation of \appname\,  is that it only approximates integrals of 1 dimension. It turns out that approximating 2 dimensional integrals is pretty much just using the formula twice, once over each dimension. This is not something that can be done by \appname\, though. It should be noted that the number of function evaluations grows exponentially with the dimension of the integral for the quadrature methods. This is why that after a certain point, Monte Carlo Integration becomes more efficient compared to the quadrature methods. Any introductory book on numerical analysis will go over it in more detail for the curious reader.
 
 \newLine A bigger limitation though is that we don't have an option for the user to input a tolerance and have \appname\, go until that tolerance is met and display the $n$ that was needed. The reason we don't have this is because our code works by using NUMPY's array arithmetic. This is a much faster way of doing the quadrature methods than using an explicit for-loop. If we wanted to allow the user to enter a tolerance, that would require an explicit for-loop, which would be very slow. There is something called Adaptive Quadrature though that will approximate the integral to a certain tolerance and still uses array arithmetic. This wasn't included because it creates in own $n$ value based on relative errors and it would make it hard to compare to the other methods.
 

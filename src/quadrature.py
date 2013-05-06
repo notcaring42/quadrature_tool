@@ -1,5 +1,6 @@
 import time
 
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import BarycentricInterpolator as scibary
 
@@ -468,7 +469,7 @@ class Simpsons(Quadrature):
         pts1 = points[0:-1:2]
         pts2 = points[1::2]
         pts3 = points[2::2]
-        plotPts = [(pt1, pt2, pt3) for pt1, pt2, pt3 in zip(pts1, pts2, pts3)]
+        plotPts = zip(pts1, pts2, pts3)
 
         # Plot the Quadratic fits and shade them in.
         for pts in plotPts:
@@ -477,7 +478,10 @@ class Simpsons(Quadrature):
             poly_fit = scibary(x_pts, y_pts)
             x1 = x_pts[0]
             x2 = x_pts[-1]
-            xL = np.linspace(x1, x2, 300 / self.n)
+            if self.n > 150:
+                xL = np.linspace(x1, x2, 1)
+            else:
+                xL = np.linspace(x1, x2, 150 / self.n)
             yL = poly_fit(xL)
             for x, y in pts:
                 ax.plot([x, x], [0, y], 'y-')
@@ -767,7 +771,7 @@ class MonteCarlo:
             randUnderZero = np.zeros(n)
             randUnderZero[yPtsUnderZero] = bigRand[yPtsUnderZero]*min_value
             ratioUnderZero = float(np.sum(randUnderZero[yPtsUnderZero] >=
-                                   y_pts[yPtsUnderZero]))/sumUnderZero
+                                          y_pts[yPtsUnderZero]))/sumUnderZero
             areaUnderZero = ratioUnderZero*(b - a)*sumUnderZero/n*min_value
 
             # Stores the approximated area under the curve and the random
@@ -828,9 +832,12 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod()
     f = lambda x: 2 * np.sqrt(1 - x**2)
-    Q = Simpsons(-1, 1, 250)
+    Q = Simpsons(-1, 1, 4)
     I = Q.integrate(f)
     F = lambda x: np.pi * x/2.0
+    fig1 = plt.figure()
+    Q.shade_under_curve(fig1, f)
     print(Q.error(F))
     print(I)
     print(Q.time_taken)
+    plt.show()

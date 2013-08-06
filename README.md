@@ -5,6 +5,11 @@ Pro Quadrature Viewer ZX790 is a graphical utility for visualizing
 [quadrature](http://en.wikipedia.org/wiki/Quadrature_%28mathematics%29 "Quadrature") 
 methods on user-inputted mathematical functions.
 
+Requirements
+------------
+This program is written in and should be invoked with Python 2.7.
+It also requires the NumPy, SciPy, Matplotlib, and PyQt4 libraries.
+
 Basic Usage
 -----------
 
@@ -30,7 +35,8 @@ for each of the methods to use.
 Further Info
 ------------
 
-More information on the program, and quadrature in general, is provided in the User's Manual.
+More information on the program, and quadrature in general, is provided in the User's Manual,
+located at __/docs/UserGuide.pdf__.
 
 Credits
 -------

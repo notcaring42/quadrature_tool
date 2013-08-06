@@ -10,7 +10,7 @@ Basic Usage
 
 To use the program, simply enter a function at the text box labeled __f(x)__. You
 can input the function as you would any Python expression, but 
-__make sure you use '^' for powers instead of '**'__. Above __f(x)__ a graph will
+_make sure you use '^' for powers instead of '**'_. Above __f(x)__ a graph will
 appear demonstrating quadrature on that function. You can change which quadrature
 method will be used in the graph in the box to the right of the graph. X-bounds and
 the number of polygons used in quadrature (__n__) can be changed in the box under the 

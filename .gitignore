@@ -6,5 +6,4 @@ gui/*.pyc
 docs/*.png
 docs/*.aux
 docs/*.log
-docs/*.pdf
 docs/*.gz

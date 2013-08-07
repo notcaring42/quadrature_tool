@@ -36,11 +36,12 @@ Further Info
 ------------
 
 More information on the program, and quadrature in general, is provided in the User's Manual,
-located at __/docs/UserGuide.pdf__.
+located at __docs/UserGuide.pdf__.
 
 Credits
 -------
 
-All of the coding for the quadrature methods was done by Jorge Almeyda and John Kluesner.
-All of the GUI coding was done by William (Max) Mays.
-Special thanks to Robert Olsen, the professor of the class for which this project was done.
+All of the coding for the quadrature methods was done by 
+[Jorge Almeyda](https://github.com/Almeydaj "Jorge Almeyda") and John Kluesner. 
+All of the GUI coding was done by William (Max) Mays. Special thanks to Robert 
+Olsen, the professor of the class for which this project was done.

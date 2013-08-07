@@ -18,7 +18,7 @@ can input the function as you would any Python expression, but
 _make sure you use '^' for powers instead of '**'_. Above __f(x)__ a graph will
 appear demonstrating quadrature on that function. You can change which quadrature
 method will be used in the graph in the box to the right of the graph. X-bounds and
-the number of polygons used in quadrature (__n__) can be changed in the box under the 
+the number of polygons used in quadrature (**n**) can be changed in the box under the 
 method-selection box.
 
 Below the input for __f(x)__ is an input for __F(x)__, the antiderivative of __f(x)__.

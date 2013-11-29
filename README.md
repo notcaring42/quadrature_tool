@@ -42,6 +42,6 @@ Credits
 -------
 
 All of the coding for the quadrature methods was done by 
-[Jorge Almeyda](https://github.com/Almeydaj "Jorge Almeyda") and John Kluesner. 
+[Jorge Almeyda](https://github.com/Almeydaj "Jorge Almeyda") and [John Kluesner] (https://github.com/stringman45 "John Kluesner"). 
 All of the GUI coding was done by William (Max) Mays. Special thanks to Robert 
 Olsen, the professor of the class for which this project was done.
